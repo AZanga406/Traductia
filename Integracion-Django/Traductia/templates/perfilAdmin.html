@@ -1,0 +1,75 @@
+{% extends 'index_master.html' %}
+
+{% block content %}
+
+
+<div class="right_col" role="main">
+
+
+    <!-- Tabla Usuarios -->
+    <div class="row">
+
+        <div class="col">
+            <div class="col">
+                <form method="GET" class="form-inline mb-3">
+                    <div class="form-group">
+                        <label for="nombre_busqueda" class="sr-only">Buscar por nombre</label>
+                        <input type="text" class="form-control" id="nombre_busqueda" name="nombre_busqueda"
+                            placeholder="Buscar por nombre" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+            </div>
+            <table class="table  table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>##</th>
+                        <th>ID</th>
+                        <th>Rut</th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Sector</th>
+                        <th>Rango</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usu in usuario %}
+                    <tr>
+                        <td>{{ forloop.counter}}</td>
+                        <td>{{usu.id}}</td>
+                        <td>{{usu.rutUsuario}}</td>
+                        <td>{{usu.nombreUsuario}}</td>
+                        <td>{{usu.user}}</td>
+                        <td>{{usu.sector.nombreDepartamento}}</td>
+                        <td>{{usu.rango.nombreRango}}</td>
+                        <td>
+                            <a href="../modificar/{{usu.id}}" class="btn btn-warning btn-sm"><i
+                                    class="bi bi-pen"></i></a><!-- Boton que llama la vista para modificar al usuario -->
+                            <a href="../eliminar/{{usu.id}}" class="btn btn-danger btn-sm"><i
+                                    class="bi bi-trash"></i></a><!-- Boton que llama al metodo que elimina al usuario -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--NO PUDE EVITAR MEDIANTE PREVIO MENSAJE, ERROR DE RUTA
+<script>
+    function confirmarEliminacion() {
+        // Solicitar confirmación al usuario con un mensaje
+        var confirmacion = confirm("¿Estás seguro de que deseas eliminar al usuario?");
+
+        // Si el usuario confirma la eliminación, redirigir al enlace
+        if (confirmacion) {
+            window.location.href = "../eliminar/{{ usu.id }}";
+        } else {
+            // Si el usuario cancela la eliminación, no se redirige a ninguna página
+        }
+    }
+
+</script>-->
+
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'index_master.html' %}
+
+{% block content %}
+
+<!-- page content -->
+<div class="right_col" role="main">
+  <!-- if que filtra la vista html dependiendo de si esta la sesion iniciada o no -->
+  {% if request.user.is_authenticated %}
+  <br />
+  <!-- primer card que muestra la cantidad de usuarios filtrados por sector-->
+  <div class="row">
+    <div class="col-md-4 col-sm-4 ">
+      <div class="x_panel tile fixed_height_320 overflow_hidden">
+        <div class="x_title">
+          <h2>Cantidad de Usuarios</h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+          <table class="" style="width:100%">
+            <tr>
+              <th>
+                <div class="col-lg-7 col-md-7 col-sm-7 ">
+                  <p class="">Sectores </p>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 ">
+                  <p class="">Cantidad Usuarios por Sector</p>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <table class="countries_list">
+                  {% for s in sector %}
+                  <tr>
+                    <td>
+                      <p>{{ s.nombreDepartamento }}</p>
+                    </td>
+                    <td>
+                      {% if s.nombreDepartamento == 'Administrativo' %}
+                      <p>{{administrativos}}</p>
+                      {% endif %}
+                      {% if s.nombreDepartamento == 'Funcionario' %}
+                      <p>{{funcionarios}}</p>
+                      {% endif %}
+                      {% if s.nombreDepartamento == 'Publico' %}
+                      <p>{{publicos}}</p>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Card que contiene la informacion de usos que se le ha dado al traductor filtradas por sector -->
+    <div class="col-md-4 col-sm-4 ">
+      <div class="x_panel tile fixed_height_320 overflow_hidden">
+        <div class="x_title">
+          <h2>Usos por Sectores</h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+          <table class="" style="width:100%">
+            <tr>
+              <th>
+                <div class="col-lg-7 col-md-7 col-sm-7 ">
+                  <p class="">Sectores </p>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 ">
+                  <p class="">Cantidad Usos por Sector</p>
+                </div>
+              </th>
+            </tr>
+            <tr>
+
+              <td>
+                <table class="countries_list">
+                  <tbody>
+                    {% for s in sector %}
+                    <tr>
+                      <td>
+                        <p>{{ s.nombreDepartamento }}</p>
+                      </td>
+                      <td>
+                        {% if s.nombreDepartamento == 'Administrativo' %}
+                      <td>{{s.usos}}</td>
+                      <td id="contadorBoton1"></td>
+                      {% endif %}
+                      {% if s.nombreDepartamento == 'Funcionario' %}
+                      <td>{{s.usos}}</td>
+                      <td id="contadorBoton2"></td>
+                      {% endif %}
+                      {% if s.nombreDepartamento == 'Publico' %}
+                      <td>{{s.usos}}</td>
+                      <span id="contadorBoton3"></span>
+                      {% endif %}
+              </td>
+
+
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          </td>
+          </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- final bloque interno -->
+{% else %}
+<h2>DEBE INICIAR SESION</h2>
+{% endif %}
+</div>
+</div>
+</div>
+<!-- /page content -->
+{% endblock %}

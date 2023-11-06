@@ -1,0 +1,63 @@
+{% extends 'index_master.html' %}
+
+{% block content %}
+
+<div class="right_col" role="main">
+    <div class="container">
+        <li class="nav-item">
+            <a>Editando a Usuario : # {{usu.nombreUsuario}} #</a>
+        </li>
+        <hr>
+        <!--Inicio del Formulario para agregar Usuarios -->
+        <form action="/editarUsuario/" method="POST" id="frmEditarUsuarios" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" value="{{ usuario.id }}" id="id" name="id">
+            <div class="form-group">
+                <label for="rutUsuario" class="col-form-label-sn form-label">Rut de Usuario:</label>
+                <input name='rutUsuario' type="text" class="form-control" id="rutUsu" aria-describedby="rutUsuario">
+            </div>
+            <div class="form-group">
+                <label for="nombreUsuario" class="col-form-label-sn form-label">Nombre de Usuario:</label>
+                <input name='nombreUsuario' type="text" class="form-control" id="nomUsu"
+                    aria-describedby="nombreUsuario">
+            </div>
+            <div class="form-group">
+                <label for="appellidosUsuario" class="col-form-label-sn form-label">Apellidos de Usuario:</label>
+                <input name='apellidosUsuario' type="text" class="form-control" id="appsUsu"
+                    aria-describedby="appellidosUsuario">
+            </div>
+            <div class="form-group">
+                <label for="sector" class="col-form-label-sn form-label">Sector de Usuario:</label>
+                <select name="sector" id="sectorUsu" class="form-select form-select-sm"><!-- Select que entrega opciones disponibles en la base de datos -->
+                    {% for s in sector %}
+                    <option value="{{ s.id }}">{{ s.nombreDepartamento }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="webappt_rango" class="col-form-label-sn form-label">Rango del Usuario:</label>
+                <select name="rango" id="rangoUsu" class="form-select form-select-sm"><!-- Select que entrega opciones disponibles en la base de datos -->
+                    {% for s in rango %}
+                    <option value="{{ s.id }}">{{ s.nombreRango }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="user">User</label>
+                <input name="user" type="text" class="form-control" id="userUsu">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input name="password" type="password" class="form-control" id="passUsu">
+            </div>
+            <hr>
+
+            <button type="submit" class="btn btn-primary">Editar Usuario</button>
+        </form>
+        <!--Fin del Formulario para agregar Usuarios -->
+
+    </div>
+
+</div>
+
+{% endblock %}

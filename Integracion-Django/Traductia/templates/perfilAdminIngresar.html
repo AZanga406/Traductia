@@ -1,0 +1,169 @@
+{% extends 'index_master.html' %}
+
+{% block content %}
+
+<div class="right_col" role="main">
+    <div class="container">
+        <!-- Formulario para agregar Usuarios -->
+        <form action="/addUsuario/" method="POST" id="frmUsuarios" onsubmit="return validarFormulario()">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="rutUsuario" class="col-form-label-sn form-label">Rut de Usuario:</label>
+                <input name='rutUsuario' type="text" class="form-control" id="rutUsu" aria-describedby="rutUsuario">
+            </div>
+            <div class="form-group">
+                <label for="nombreUsuario" class="col-form-label-sn form-label">Nombre de Usuario:</label>
+                <input name='nombreUsuario' type="text" class="form-control" id="nomUsu"
+                    aria-describedby="nombreUsuario" required>
+            </div>
+            <div class="form-group">
+                <label for="appellidosUsuario" class="col-form-label-sn form-label">Apellidos de Usuario:</label>
+                <input name='apellidosUsuario' type="text" class="form-control" id="appsUsu"
+                    aria-describedby="appellidosUsuario" required>
+            </div>
+            <div class="form-group">
+                <label for="sector" class="col-form-label-sn form-label">Sector de Usuario:</label>
+                <select name="sector" id="sectorUsu" class="form-select form-select-sm">
+                    {% for s in sector %}
+                    <option value="{{ s.id }}">{{ s.nombreDepartamento }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="webappt_rango" class="col-form-label-sn form-label">Rango del Usuario:</label>
+                <select name="rango" id="rangoUsu" class="form-select form-select-sm">
+                    {% for s in rango %}
+                    <option value="{{ s.id }}">{{ s.nombreRango }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="user">User</label>
+                <input name="user" type="text" class="form-control" id="userUsu" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input name="password" type="password" class="form-control" id="passUsu" required>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar formulario</button>
+        </form>        
+    </div>
+</div>
+
+<script>
+
+    // Limpia el formulario
+    function limpiarFormulario() {
+        document.getElementById("frmUsuarios").reset();
+    }
+
+    function validarFormulario() {
+        // Obtener los valores de los campos del formulario
+        var rutUsuario = document.getElementById("rutUsu").value;
+        var nombreUsuario = document.getElementById("nomUsu").value;
+        var apellidosUsuario = document.getElementById("appsUsu").value;
+        var user = document.getElementById("userUsu").value;
+        var password = document.getElementById("passUsu").value;
+
+        // Realizar las validaciones
+        if (!validarRut(rutUsuario)) {
+            alert("Por favor, ingresa un Rut chileno válido.");
+            return false;
+        }
+
+        if (nombreUsuario === "") {
+            mostrarError("nomUsu", "El nombre de usuario es obligatorio.");
+            return false;
+        }
+
+        // Verificar que el nombre de usuario contenga solo letras y espacios
+        if (!/^[a-zA-Z\s]+$/.test(nombreUsuario)) {
+            mostrarError("nomUsu", "El nombre de usuario solo puede contener letras y espacios.");
+            return false;
+        }
+
+        if (apellidosUsuario === "") {
+            mostrarError("appsUsu", "Los apellidos son obligatorios.");
+            return false;
+        }
+
+        // Verificar que los apellidos contengan solo letras y espacios
+        if (!/^[a-zA-Z\s]+$/.test(apellidosUsuario)) {
+            mostrarError("appsUsu", "Los apellidos solo pueden contener letras y espacios.");
+            return false;
+        }
+
+        if (user === "") {
+            mostrarError("userUsu", "El usuario es obligatorio.");
+            return false;
+        }
+
+        if (password === "") {
+            mostrarError("passUsu", "La contraseña es obligatoria.");
+            return false;
+        }
+
+        // Restablecer el estilo y mensaje de error si pasó todas las validaciones
+        mostrarExito("nomUsu");
+        mostrarExito("userUsu");
+        mostrarExito("passUsu");
+        return true;
+    }
+
+    function mostrarError(inputId, mensaje) {
+        var input = document.getElementById(inputId);
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+
+        var errorDiv = document.createElement("div");
+        errorDiv.className = "invalid-feedback";
+        errorDiv.innerText = mensaje;
+
+        var parentDiv = input.parentElement;
+        parentDiv.appendChild(errorDiv);
+    }
+
+    function mostrarExito(inputId) {
+        var input = document.getElementById(inputId);
+        input.classList.remove("is-invalid");
+        input.classList.add("is-valid");
+
+        var parentDiv = input.parentElement;
+        var errorDiv = parentDiv.querySelector(".invalid-feedback");
+        if (errorDiv) {
+            parentDiv.removeChild(errorDiv);
+        }
+    }
+
+    function validarRut(rut) {
+        // Eliminar puntos y guión del Rut (si los tiene)
+        rut = rut.replace(/\./g, "").replace(/-/g, "");
+
+        // Separar el Rut de su dígito verificador
+        var rutSinDV = rut.slice(0, -1);
+        var dv = rut.slice(-1).toUpperCase();
+
+        // Validar que el Rut tenga un formato válido
+        if (!/^[0-9]+[kK]?$/i.test(rutSinDV)) {
+            return false;
+        }
+
+        // Calcular el dígito verificador esperado
+        var suma = 0;
+        var factor = 2;
+        for (var i = rutSinDV.length - 1; i >= 0; i--) {
+            suma += factor * parseInt(rutSinDV.charAt(i));
+            factor = factor === 7 ? 2 : factor + 1;
+        }
+        var dvEsperado = 11 - (suma % 11);
+        dvEsperado = dvEsperado === 11 ? 0 : dvEsperado === 10 ? "K" : dvEsperado.toString();
+
+        // Comparar el dígito verificador ingresado con el esperado
+        return dv === dvEsperado;
+    }
+</script>
+
+
+{% endblock %}
